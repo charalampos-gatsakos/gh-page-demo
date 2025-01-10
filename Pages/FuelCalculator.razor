@@ -1,0 +1,72 @@
+﻿@page "/fuel"
+@using TotaLift.Client.Models
+@* @rendermode InteractiveWebAssemblyRenderMode interactiveWebAssemblyRenderMode *@
+
+<div class="container mt-4" style="max-width: 600px;">
+    <div class="card">
+        <div class="card-body">
+            <h3>Fuel Consumption Calculator</h3>
+            <br />
+            <!-- Input Fields with Spacing -->
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-2">
+                    <label for="liters">Liters burned</label>
+                    <input id="liters" class="form-control" @bind="FuelCalculatorModel.Liters" type="number" placeholder="Enter liters" />
+                </div>
+                <div class="col-12 col-sm-6 mb-2">
+                    <label for="distance">Distance (km)</label>
+                    <input id="distance" class="form-control" @bind="FuelCalculatorModel.Distance" type="number" placeholder="Enter distance" />
+                </div>
+                <div class="col-12 col-sm-6 mb-2">
+                    <label for="totalCost">Total cost (€)</label>
+                    <input id="totalCost" class="form-control" @bind="FuelCalculatorModel.TotalCost" type="number" placeholder="Enter cost" />
+                </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button class="btn btn-primary my-4" @onclick="CalculateConsumption">Calculate</button>
+
+            <!-- Results Section -->
+            @if (isCalculationPerformed)
+            {
+                <hr class="my-4" />
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <p><strong>Fuel Consumption (liters/100km):</strong></p>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <p>@FuelCalculatorModel.FuelConsumptionPer100Km</p>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <p><strong>Cost per 100km (€):</strong></p>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <p>@FuelCalculatorModel.CostPer100Km</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private FuelCalculatorModel FuelCalculatorModel = new();
+    private bool isCalculationPerformed = false;
+
+    private void CalculateConsumption()
+    {
+        if (FuelCalculatorModel.Distance > 0 && FuelCalculatorModel.Liters > 0 && FuelCalculatorModel.TotalCost > 0)
+        {
+            FuelCalculatorModel.FuelConsumptionPer100Km = (FuelCalculatorModel.Liters / FuelCalculatorModel.Distance) * 100;
+            var costPerLiter = FuelCalculatorModel.TotalCost / FuelCalculatorModel.Liters;
+            FuelCalculatorModel.CostPer100Km = FuelCalculatorModel.FuelConsumptionPer100Km * costPerLiter;
+            isCalculationPerformed = true;
+        }
+        else
+        {
+            FuelCalculatorModel.FuelConsumptionPer100Km = 0;
+            FuelCalculatorModel.CostPer100Km = 0;
+            isCalculationPerformed = false;
+        }
+    }
+}
