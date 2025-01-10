@@ -1,0 +1,1 @@
+C:\Users\c.gatsakos\source\repos\gh-page-demo\obj\Release\net9.0\browser-wasm\PubTmp\Out\web.config
